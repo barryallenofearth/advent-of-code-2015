@@ -8,16 +8,13 @@ public class AdventCoinsMiner {
 		String input = "ckczppom";
 
 		int currentNumber = 1;
-		byte[] bytes = DigestUtils.md5(input + currentNumber);
-		while (!(String.format("%02X", bytes[0]).equals("00") && String.format("%02X", bytes[1]).equals("00") && String.format("%02X", bytes[2]).matches("0\\d"))) {
+		String bytes = DigestUtils.md5Hex(input + currentNumber);
+		while (!bytes.startsWith("00000")) {
 			currentNumber++;
-			bytes = DigestUtils.md5(input + currentNumber);
+			bytes = DigestUtils.md5Hex(input + currentNumber);
 		}
 		System.out.println(input + currentNumber);
-		for (byte aByte : bytes) {
-			System.out.print(String.format("%02X", aByte));
-
-		}
+		System.out.println(bytes);
 		System.out.println("");
 		return currentNumber;
 	}
