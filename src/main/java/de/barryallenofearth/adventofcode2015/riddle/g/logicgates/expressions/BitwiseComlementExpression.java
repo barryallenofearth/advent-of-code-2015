@@ -5,11 +5,11 @@ import lombok.Getter;
 @Getter
 public class BitwiseComlementExpression extends SingleExpression {
 
-	public BitwiseComlementExpression(String name, String internalExpressionName) {
-		super(name, internalExpressionName);
+	public BitwiseComlementExpression(String internalExpressionName) {
+		super(internalExpressionName);
 	}
 
 	@Override public int evaluate() {
-		return ~internalExpression.evaluate();
+		return ~value;
 	}
 }

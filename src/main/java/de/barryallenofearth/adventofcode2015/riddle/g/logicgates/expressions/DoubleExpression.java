@@ -5,10 +5,9 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public abstract class DoubleExpression extends Expression {
+public abstract class DoubleExpression implements Expression {
 
-	public DoubleExpression(String name, String expressionName1, String expressionName2) {
-		super(name);
+	public DoubleExpression(String expressionName1, String expressionName2) {
 		this.expressionName1 = expressionName1;
 		this.expressionName2 = expressionName2;
 	}
@@ -17,7 +16,7 @@ public abstract class DoubleExpression extends Expression {
 
 	private final String expressionName2;
 
-	protected Expression expression1;
+	protected Integer expression1;
 
-	protected Expression expression2;
+	protected Integer expression2;
 }

@@ -5,14 +5,14 @@ import lombok.Getter;
 @Getter
 public class RightShiftExpression extends SingleExpression {
 
-	public RightShiftExpression(String name, String internalExpressionName, int shiftCount) {
-		super(name, internalExpressionName);
+	public RightShiftExpression(String internalExpressionName, int shiftCount) {
+		super(internalExpressionName);
 		this.shiftCount = shiftCount;
 	}
 
 	private final int shiftCount;
 
 	@Override public int evaluate() {
-		return internalExpression.evaluate() >>> shiftCount;
+		return value >>> shiftCount;
 	}
 }

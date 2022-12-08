@@ -5,11 +5,11 @@ import lombok.Getter;
 @Getter
 public class AndExpression extends DoubleExpression {
 
-	public AndExpression(String name, String expressionName1, String expressionName2) {
-		super(name, expressionName1, expressionName2);
+	public AndExpression(String expressionName1, String expressionName2) {
+		super(expressionName1, expressionName2);
 	}
 
 	@Override public int evaluate() {
-		return expression1.evaluate() & expression2.evaluate();
+		return expression1 & expression2;
 	}
 }

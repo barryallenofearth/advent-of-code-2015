@@ -5,14 +5,14 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public abstract class SingleExpression extends Expression {
+public abstract class SingleExpression implements Expression {
 
-	public SingleExpression(String name, String internalExpressionName) {
-		super(name);
+	public SingleExpression(String internalExpressionName) {
 		this.internalExpressionName = internalExpressionName;
 	}
 
 	private final String internalExpressionName;
 
-	protected Expression internalExpression;
+	protected Integer value;
+
 }
