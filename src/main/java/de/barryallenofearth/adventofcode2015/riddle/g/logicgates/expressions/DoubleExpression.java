@@ -1,11 +1,10 @@
 package de.barryallenofearth.adventofcode2015.riddle.g.logicgates.expressions;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Setter
 @Getter
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
 public abstract class DoubleExpression extends Expression {
 
 	public DoubleExpression(String name, String expressionName1, String expressionName2) {

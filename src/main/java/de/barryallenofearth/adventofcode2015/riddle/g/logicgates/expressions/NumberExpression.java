@@ -1,20 +1,19 @@
 package de.barryallenofearth.adventofcode2015.riddle.g.logicgates.expressions;
 
-import lombok.*;
+import lombok.Getter;
 
 @Getter
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 public class NumberExpression extends Expression {
 
-	public NumberExpression(String name, int number) {
-		super(name);
-		this.number = number;
-	}
+    public NumberExpression(String name, int number) {
+        super(name);
+        this.number = number;
+    }
 
-	private final int number;
+    private final int number;
 
-	@Override public int evaluate() {
-		return number;
-	}
+    @Override
+    public int evaluate() {
+        return number;
+    }
 }

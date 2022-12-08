@@ -1,9 +1,9 @@
 package de.barryallenofearth.adventofcode2015.riddle.g.logicgates.expressions;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Data
+@Getter
 @RequiredArgsConstructor
 public abstract class Expression {
 
