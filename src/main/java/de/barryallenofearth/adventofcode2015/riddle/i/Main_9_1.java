@@ -16,7 +16,7 @@ public class Main_9_1 {
         Map<String, Map<String, Integer>> startWithAllDestinations = getStringMapMap();
 
 
-        int minimumDistance = Integer.MAX_VALUE;
+        int maximumValue = Integer.MIN_VALUE;
 
         for (String startingKey : startWithAllDestinations.keySet()) {
             int totalDistance = 0;
@@ -31,7 +31,7 @@ public class Main_9_1 {
                     break;
                 }
                 final Optional<Map.Entry<String, Integer>> minimumDestination = start.entrySet().stream()
-                        .min(Comparator.comparingInt(Map.Entry::getValue));
+                        .max(Comparator.comparingInt(Map.Entry::getValue));
 //                System.out.println(minimumDestination.get().getKey() + " " + minimumDestination.get().getValue());
                 totalDistance += minimumDestination.get().getValue();
 
@@ -46,11 +46,11 @@ public class Main_9_1 {
                 nextStep = deletableItems.get(nextStepKey);
 
             } while (!deletableItems.isEmpty());
-            if(totalDistance < minimumDistance){
-                minimumDistance = totalDistance;
+            if(totalDistance > maximumValue){
+                maximumValue = totalDistance;
             }
         }
-        System.out.println(minimumDistance);
+        System.out.println(maximumValue);
     }
 
     private static Map<String, Map<String, Integer>> getStringMapMap() throws IOException, URISyntaxException {
