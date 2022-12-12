@@ -21,7 +21,7 @@ public class Main_12_2 {
 				int startIndexRect = findOpeningBraceIndex(string, redIndex);
 				int stopIndexRect = findClosingBraceIndex(string, redIndex);
 				final String blockContainingRed = string.substring(startIndexRect, stopIndexRect + 1);
-				System.out.println(blockContainingRed.replace(",", ",\n"));
+				System.out.println(blockContainingRed);
 				if (!blockContainingRed.contains(RED)) {
 					continue;
 				}
