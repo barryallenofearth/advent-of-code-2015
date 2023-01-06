@@ -1,7 +1,6 @@
 package de.barryallenofearth.adventofcode2015.riddle.day7.logicgates;
 
 import de.barryallenofearth.adventofcode2015.riddle.day7.logicgates.expressions.*;
-import de.barryallenofearth.adventofcode2015.riddle.g.logicgates.expressions.*;
 import de.barryallenofearth.adventofcode2015.riddle.util.RiddleFileReader;
 
 import java.io.IOException;

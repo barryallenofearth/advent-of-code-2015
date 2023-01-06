@@ -1,7 +1,7 @@
 package de.barryallenofearth.adventofcode2015.riddle.day3.findhouse.part1;
 
-import de.barryallenofearth.adventofcode2015.riddle.day3.findhouse.part1.common.DetermineReachedHouses;
 import de.barryallenofearth.adventofcode2015.riddle.day3.findhouse.model.HouseCoordinates;
+import de.barryallenofearth.adventofcode2015.riddle.day3.findhouse.part1.common.DetermineReachedHouses;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
