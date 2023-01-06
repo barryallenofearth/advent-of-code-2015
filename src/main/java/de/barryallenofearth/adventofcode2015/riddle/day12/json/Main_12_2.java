@@ -10,6 +10,8 @@ import java.util.List;
 public class Main_12_2 {
 	public static final String RED = "\"red\"";
 
+	public static final String GREEN = "\"green\"";
+
 	public static void main(String[] args) throws IOException, URISyntaxException {
 
 		final List<String> strings = RiddleFileReader.readAllLines("riddle-12.json");
@@ -19,6 +21,10 @@ public class Main_12_2 {
 			while (string.contains(RED)) {
 				final int redIndex = string.indexOf(RED);
 				int startIndexRect = findOpeningBraceIndex(string, redIndex);
+				if (startIndexRect == -1) {
+					string = string.replaceFirst(RED, GREEN);
+					continue;
+				}
 				int stopIndexRect = findClosingBraceIndex(string, redIndex);
 				final String blockContainingRed = string.substring(startIndexRect, stopIndexRect + 1);
 				System.out.println(blockContainingRed);
@@ -62,7 +68,7 @@ public class Main_12_2 {
 			}
 			currentIndex--;
 		}
-		return openingIndex;
+		return rectBracesNeeded == 0 ? -1 : openingIndex;
 	}
 
 	public static int findClosingBraceIndex(String json, int redStartingIndex) {
