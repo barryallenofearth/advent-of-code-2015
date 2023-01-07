@@ -18,4 +18,5 @@ public class Reindeer {
 
 	private int travelledDistance = 0;
 
+	private int score;
 }
