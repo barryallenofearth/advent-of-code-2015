@@ -1,6 +1,7 @@
 package de.barryallenofearth.adventofcode2015.riddle.day13.common.uitl;
 
 import de.barryallenofearth.adventofcode2015.riddle.day13.common.model.Pair;
+import de.barryallenofearth.adventofcode2015.riddle.day13.common.model.PairWithHappiness;
 import de.barryallenofearth.adventofcode2015.riddle.day13.common.model.PeopleAndPairs;
 import de.barryallenofearth.adventofcode2015.riddle.day13.common.model.Person;
 import de.barryallenofearth.adventofcode2015.riddle.util.RiddleFileReader;
@@ -28,7 +29,7 @@ public class PeopleHappinessParser {
 				final Person neighbor = new Person(matcher.group(4));
 				peopleAndPairs.getPeople().add(person);
 
-				peopleAndPairs.getPairList().add(new Pair(person, neighbor, happinessModifier));
+				peopleAndPairs.getPairList().add(new PairWithHappiness(new Pair(person, neighbor), happinessModifier));
 			}
 		}
 		return peopleAndPairs;
