@@ -11,9 +11,12 @@ public class Main_15_1 {
 	public static void main(String[] args) {
 		final List<Ingredient> ingredientList = new IngredientReader().read();
 		final BestMixEvaluator bestMixEvaluator = new BestMixEvaluator();
-		final Map<Ingredient, Integer> bestMix = bestMixEvaluator.determineBestMixture(ingredientList);
+		final Map<String, Integer> bestMix = bestMixEvaluator.determineBestMixture(ingredientList);
+
+		for (Map.Entry<String, Integer> entry : bestMix.entrySet()) {
+			System.out.println(entry.getKey() + ": " + entry.getValue());
+		}
 
 		System.out.println(bestMixEvaluator.calculateScore(bestMix) + " is the highest score.");
-
 	}
 }
