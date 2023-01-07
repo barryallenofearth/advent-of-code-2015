@@ -1,18 +1,32 @@
-package de.barryallenofearth.adventofcode2015.riddle.day13.part1;
+package de.barryallenofearth.adventofcode2015.riddle.day13.common;
 
+import com.google.common.collect.Collections2;
 import de.barryallenofearth.adventofcode2015.riddle.day13.common.model.Pair;
 import de.barryallenofearth.adventofcode2015.riddle.day13.common.model.PairWithHappiness;
 import de.barryallenofearth.adventofcode2015.riddle.day13.common.model.PeopleAndPairs;
 import de.barryallenofearth.adventofcode2015.riddle.day13.common.model.Person;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 public class PeopleSorter {
 
 	public List<Person> sort(PeopleAndPairs peopleAndPairs) {
-		return new ArrayList<>(peopleAndPairs.getPeople());
+
+		final Collection<List<Person>> permutations = Collections2.permutations(peopleAndPairs.getPeople());
+
+		int maxHappiness = Integer.MIN_VALUE;
+		List<Person> sortedPeople = new ArrayList<>(peopleAndPairs.getPeople());
+		for (List<Person> permutation : permutations) {
+			final int happiness = calculateHappiness(permutation, peopleAndPairs.getPairList());
+			if (happiness > maxHappiness) {
+				maxHappiness = happiness;
+				sortedPeople = permutation;
+			}
+		}
+		return sortedPeople;
 
 	}
 

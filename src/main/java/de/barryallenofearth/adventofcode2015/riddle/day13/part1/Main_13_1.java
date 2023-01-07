@@ -1,5 +1,6 @@
 package de.barryallenofearth.adventofcode2015.riddle.day13.part1;
 
+import de.barryallenofearth.adventofcode2015.riddle.day13.common.PeopleSorter;
 import de.barryallenofearth.adventofcode2015.riddle.day13.common.model.PeopleAndPairs;
 import de.barryallenofearth.adventofcode2015.riddle.day13.common.model.Person;
 import de.barryallenofearth.adventofcode2015.riddle.day13.common.uitl.PeopleHappinessParser;
