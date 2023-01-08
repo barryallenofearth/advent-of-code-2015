@@ -2,6 +2,7 @@ package de.barryallenofearth.adventofcode2015.riddle.day15.cookiereceipe.common.
 
 import de.barryallenofearth.adventofcode2015.riddle.day15.cookiereceipe.common.model.DistributionState;
 import de.barryallenofearth.adventofcode2015.riddle.day15.cookiereceipe.common.model.Ingredient;
+import org.checkerframework.framework.qual.LiteralKind;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,7 +27,7 @@ public class BestMixEvaluator {
 
 		Map<String, Integer> bestMixture = new HashMap<>(ingredientTeaSpoonAmount);
 		long maxScore = calculateScore(bestMixture);
-		System.out.println("Current maximum is "+ maxScore);
+		System.out.println("Current maximum is " + maxScore);
 
 		Set<DistributionState> evaluatedStates = new HashSet<>();
 		Stack<DistributionState> openNodes = new Stack<>();
@@ -35,7 +36,7 @@ public class BestMixEvaluator {
 		while (!openNodes.isEmpty()) {
 			final DistributionState currentState = openNodes.pop();
 			final long score = calculateScore(currentState.getIngredientsAndAmount());
-			if (score > maxScore) {
+			if (score > maxScore && useBranch(currentState.getIngredientsAndAmount())) {
 				bestMixture = currentState.getIngredientsAndAmount();
 				maxScore = score;
 				System.out.println("new max found: " + maxScore);
@@ -52,7 +53,7 @@ public class BestMixEvaluator {
 					next.put(from.getName(), currentState.getIngredientsAndAmount().get(from.getName()) - 1);
 					next.put(to.getName(), currentState.getIngredientsAndAmount().get(to.getName()) + 1);
 					DistributionState nextState = new DistributionState(next);
-					if (!evaluatedStates.contains(nextState) && useBranch(next)) {
+					if (!evaluatedStates.contains(nextState)) {
 						openNodes.add(nextState);
 					}
 				}
@@ -67,12 +68,16 @@ public class BestMixEvaluator {
 	}
 
 	private boolean useBranch(Map<String, Integer> ingredientTeaSpoonAmount) {
-		return true;
-//		final Integer sugar = ingredientTeaSpoonAmount.get(SUGAR);
-//		final Integer sprinkles = ingredientTeaSpoonAmount.get(SPRINKLES);
-//		final Integer candy = ingredientTeaSpoonAmount.get(CANDY);
-//		final Integer chocolate = ingredientTeaSpoonAmount.get(CHOCOLATE);
-//		return candy > chocolate / 2 && sugar > 2. / 3. * sugar && sprinkles > -1. / 3. * candy + sugar;
+		final Integer sugar = ingredientTeaSpoonAmount.get(SUGAR);
+		final Integer sprinkles = ingredientTeaSpoonAmount.get(SPRINKLES);
+		final Integer candy = ingredientTeaSpoonAmount.get(CANDY);
+		final Integer chocolate = ingredientTeaSpoonAmount.get(CHOCOLATE);
+
+		int calories = 0;
+		for (Map.Entry<String, Integer> entry : ingredientTeaSpoonAmount.entrySet()) {
+			calories += nameIngredientCache.get(entry.getKey()).getCalories() * entry.getValue();
+		}
+		return calories == 500;
 	}
 
 	public long calculateScore(Map<String, Integer> ingredientTeaSpoonAmount) {
