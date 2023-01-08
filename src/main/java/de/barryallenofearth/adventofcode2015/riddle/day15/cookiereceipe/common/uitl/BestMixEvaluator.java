@@ -10,23 +10,27 @@ public class BestMixEvaluator {
 
 	public static final int NUMBER_OF_TEASPOONS = 100;
 
+	public static final String SUGAR = "Sugar";
+
+	public static final String SPRINKLES = "Sprinkles";
+
+	public static final String CANDY = "Candy";
+
+	public static final String CHOCOLATE = "Chocolate";
+
 	private Map<String, Ingredient> nameIngredientCache;
 
-	public Map<String, Integer> determineBestMixture(List<Ingredient> ingredientList) {
+	public Map<String, Integer> determineBestMixture(List<Ingredient> ingredientList, final Map<String, Integer> ingredientTeaSpoonAmount) {
 		nameIngredientCache = ingredientList.stream().collect(Collectors.toMap(Ingredient::getName, ingredient -> ingredient));
 		final int maxAmountAllowed = NUMBER_OF_TEASPOONS - (ingredientList.size() - 1);
 
-		final Map<String, Integer> ingredientTeaSpoonAmount = ingredientList.stream()
-				.collect(Collectors.toMap(Ingredient::getName, ingredient -> 1));
-		ingredientTeaSpoonAmount.put(ingredientList.get(0).getName(), maxAmountAllowed);
-
 		Map<String, Integer> bestMixture = new HashMap<>(ingredientTeaSpoonAmount);
 		long maxScore = calculateScore(bestMixture);
+		System.out.println("Current maximum is "+ maxScore);
 
 		Set<DistributionState> evaluatedStates = new HashSet<>();
 		Stack<DistributionState> openNodes = new Stack<>();
-		openNodes.add(new DistributionState(bestMixture.entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
+		openNodes.add(new DistributionState(new HashMap<>(bestMixture)));
 
 		while (!openNodes.isEmpty()) {
 			final DistributionState currentState = openNodes.pop();
@@ -34,6 +38,7 @@ public class BestMixEvaluator {
 			if (score > maxScore) {
 				bestMixture = currentState.getIngredientsAndAmount();
 				maxScore = score;
+				System.out.println("new max found: " + maxScore);
 			}
 			for (Ingredient from : ingredientList) {
 				if (currentState.getIngredientsAndAmount().get(from.getName()) == 1) {
@@ -47,7 +52,7 @@ public class BestMixEvaluator {
 					next.put(from.getName(), currentState.getIngredientsAndAmount().get(from.getName()) - 1);
 					next.put(to.getName(), currentState.getIngredientsAndAmount().get(to.getName()) + 1);
 					DistributionState nextState = new DistributionState(next);
-					if (!evaluatedStates.contains(nextState)) {
+					if (!evaluatedStates.contains(nextState) && useBranch(next)) {
 						openNodes.add(nextState);
 					}
 				}
@@ -61,14 +66,13 @@ public class BestMixEvaluator {
 		return bestMixture;
 	}
 
-	private boolean ignoreBranch(Map<String, Integer> ingredientTeaSpoonAmount) {
-		for (Map.Entry<String, Integer> entry : ingredientTeaSpoonAmount.entrySet()) {
-			final Integer numberOfTeaSpoons = entry.getValue();
-			final Ingredient ingredient = nameIngredientCache.get(entry.getKey());
-
-		}
-
-		return false;
+	private boolean useBranch(Map<String, Integer> ingredientTeaSpoonAmount) {
+		return true;
+//		final Integer sugar = ingredientTeaSpoonAmount.get(SUGAR);
+//		final Integer sprinkles = ingredientTeaSpoonAmount.get(SPRINKLES);
+//		final Integer candy = ingredientTeaSpoonAmount.get(CANDY);
+//		final Integer chocolate = ingredientTeaSpoonAmount.get(CHOCOLATE);
+//		return candy > chocolate / 2 && sugar > 2. / 3. * sugar && sprinkles > -1. / 3. * candy + sugar;
 	}
 
 	public long calculateScore(Map<String, Integer> ingredientTeaSpoonAmount) {
