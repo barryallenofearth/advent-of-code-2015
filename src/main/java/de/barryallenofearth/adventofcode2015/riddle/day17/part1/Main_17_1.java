@@ -12,7 +12,7 @@ public class Main_17_1 {
 		final List<Container> containerList = containerReader.read();
 
 		final int requiredAmount = 150;
-		final int combinations = new CombinationsCounter().countCombinations(containerList, requiredAmount);
+		final int combinations = new CombinationsCounter().countCombinations(containerList, requiredAmount).size();
 		System.out.println(combinations + " combinations found.");
 	}
 }
