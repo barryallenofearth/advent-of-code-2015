@@ -1,8 +1,8 @@
-package de.barryallenofearth.adventofcode2015.riddle.day18.part1;
+package de.barryallenofearth.adventofcode2015.riddle.day18.animatedlights.part2;
 
 import java.util.function.BiFunction;
 
-public class GridAnimator {
+public class GridAnimatorWithCornersOn {
 
 	/**
 	 * first input: status of light (1 is on, 0 is off)
@@ -31,11 +31,19 @@ public class GridAnimator {
 
 		int[][] previousGrid = initialGrid;
 		for (int round = 0; round < numberOfIterations; round++) {
+			displayGridAndCount(previousGrid);
 			int[][] nextGrid = new int[initialGrid.length][initialGrid[0].length];
 			for (int y = 1; y < initialGrid[0].length - 1; y++) {
 				for (int x = 1; x < initialGrid.length - 1; x++) {
 					final int numberOfNeighborsSwitchOn = countNeighborsWithLightsOn(previousGrid, x, y);
-					nextGrid[x][y] = SWITCH_LIGHT_FUNCTION.apply(previousGrid[x][y], numberOfNeighborsSwitchOn);
+					if ((x == 1 && y == 1)
+							|| (x == 1 && y == initialGrid[0].length - 2)
+							|| (x == initialGrid.length - 2 && y == 1)
+							|| (x == initialGrid.length - 2 && y == initialGrid[0].length - 2)) {
+						nextGrid[x][y] = 1;
+					} else {
+						nextGrid[x][y] = SWITCH_LIGHT_FUNCTION.apply(previousGrid[x][y], numberOfNeighborsSwitchOn);
+					}
 				}
 			}
 			previousGrid = nextGrid;
