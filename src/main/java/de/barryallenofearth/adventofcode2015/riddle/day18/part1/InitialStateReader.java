@@ -1,4 +1,4 @@
-package de.barryallenofearth.adventofcode2015.riddle.day18.common.uitl;
+package de.barryallenofearth.adventofcode2015.riddle.day18.part1;
 
 import de.barryallenofearth.adventofcode2015.riddle.util.RiddleFileReader;
 
