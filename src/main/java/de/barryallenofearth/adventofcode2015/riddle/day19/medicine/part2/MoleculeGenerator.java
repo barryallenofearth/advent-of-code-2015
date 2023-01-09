@@ -17,8 +17,7 @@ public class MoleculeGenerator {
         final String targetMolecule = replacementsAndMolecule.getInitialMolecule();
 
         final SingleReplacementVariantFinder variantFinder = new SingleReplacementVariantFinder();
-        final StringSimilarityTester stringSimilarityTester = new StringSimilarityTester();
-        final List<MoleculeState> openNodes = new ArrayList<>();
+        List<MoleculeState> openNodes = new ArrayList<>();
         openNodes.add(new MoleculeState(0, STARTING_MOLECULE));
         //contains all currently or previously investigated molecule string
         final Set<String> seenMolecules = new HashSet<>();
@@ -40,19 +39,25 @@ public class MoleculeGenerator {
                 if (targetMolecule.equals(variant)) {
                     return currentState.getModificationSteps();
                 }
-                if (!seenMolecules.contains(variant)) {
+                if (!seenMolecules.contains(variant) && variant.length() <= targetMolecule.length()) {
                     openNodes.add(new MoleculeState(currentState.getModificationSteps(), variant));
                 }
                 numberOfSteps++;
-                if (numberOfSteps % 1_000 == 0) {
+                if (numberOfSteps % 100_000 == 0) {
                     System.out.println(numberOfSteps + " were investigated.");
                     System.out.println(seenMolecules.size() + " unique molecules were found.");
+                    System.out.println(openNodes.size() + " number of open nodes.");
                     System.out.println(openNodes.get(0).getMolecule() + " is the current top molecule after " + openNodes.get(0).getModificationSteps());
                     System.out.println(targetMolecule);
+                    System.out.println("molecule length: number of encounters");
+                    openNodes.stream().collect(Collectors.groupingBy(moleculeState -> moleculeState.getMolecule().length()))
+                            .forEach((key, value) -> System.out.println(key + ": " + value.size()));
+                    System.out.println();
+
                 }
             }
             seenMolecules.addAll(variants);
-            openNodes.sort(Comparator.comparingDouble(state -> 1.0 - stringSimilarityTester.similarity(state.getMolecule(), targetMolecule)));
+            openNodes.sort(Comparator.comparingInt(MoleculeState::getModificationSteps));
 
         }
         return -1;
