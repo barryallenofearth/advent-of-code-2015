@@ -1,6 +1,6 @@
-package de.barryallenofearth.adventofcode2015.riddle.day20.part1;
+package de.barryallenofearth.adventofcode2015.riddle.day20.elfpresents.part1;
 
-import de.barryallenofearth.adventofcode2015.riddle.day20.common.uitl.PresentDistributer;
+import de.barryallenofearth.adventofcode2015.riddle.day20.elfpresents.common.uitl.PresentDistributer;
 import de.barryallenofearth.adventofcode2015.riddle.util.RiddleFileReader;
 
 public class Main_20_1 {
