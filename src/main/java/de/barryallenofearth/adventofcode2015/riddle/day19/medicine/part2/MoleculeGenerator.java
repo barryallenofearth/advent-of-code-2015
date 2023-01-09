@@ -4,7 +4,6 @@ import de.barryallenofearth.adventofcode2015.riddle.day19.medicine.common.model.
 import de.barryallenofearth.adventofcode2015.riddle.day19.medicine.common.model.ReplacementsAndMolecule;
 import de.barryallenofearth.adventofcode2015.riddle.day19.medicine.common.uitl.SingleReplacementVariantFinder;
 import de.barryallenofearth.adventofcode2015.riddle.day19.medicine.part2.model.MoleculeState;
-import org.apache.commons.codec.binary.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
