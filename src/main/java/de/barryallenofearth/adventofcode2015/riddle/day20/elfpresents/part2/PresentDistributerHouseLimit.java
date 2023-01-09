@@ -1,17 +1,18 @@
-package de.barryallenofearth.adventofcode2015.riddle.day20.elfpresents.common.uitl;
+package de.barryallenofearth.adventofcode2015.riddle.day20.elfpresents.part2;
 
 import java.util.TreeSet;
 
-public class PresentDistributer {
+public class PresentDistributerHouseLimit {
 	public int firstHouseToMatchNumberOfPresents(int targetPresents) {
-
-		int minDiff = Integer.MAX_VALUE;
 
 		int minHouseNumber = (int) (-0.5 + Math.sqrt(0.25 + targetPresents / 5.));
 		System.out.println((Math.sqrt(0.25 + targetPresents / 5.) - 0.5) + " is the minimum house number possible.");
 		System.out.println(minHouseNumber + " is the minimum house number possible.");
 		for (int house = minHouseNumber; house < targetPresents; house++) {
-			int presentsAtHouse = factors(house).stream().mapToInt(Integer::intValue).sum() * 10;
+			final int currentHouse = house;
+			int presentsAtHouse = factors(house).stream()
+					.filter(elf -> elf * 50 <= currentHouse)
+					.mapToInt(Integer::intValue).sum() * 11;
 			if (targetPresents <= presentsAtHouse) {
 				return house;
 			}
