@@ -23,7 +23,6 @@ public class SingleReplacementVariantFinder {
 				variants.add(variant);
 				startOfMolecule = initialMolecule.substring(0, indexOfReplacement + startOfMolecule.length() + replacement.getOriginal().length());
 				remainingString = initialMolecule.substring(startOfMolecule.length());
-				System.out.println(variant);
 			}
 		}
 
