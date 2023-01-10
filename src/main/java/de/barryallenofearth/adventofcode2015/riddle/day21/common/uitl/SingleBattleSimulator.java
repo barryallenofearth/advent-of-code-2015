@@ -11,7 +11,6 @@ public class SingleBattleSimulator {
                 break;
             }
             you.dealDamageToFighter(boss);
-            System.out.println();
         }
         return boss.getRemainingHealth() <= 0;
     }
