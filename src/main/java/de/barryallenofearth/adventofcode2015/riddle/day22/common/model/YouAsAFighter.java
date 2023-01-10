@@ -10,15 +10,22 @@ import java.util.*;
 @EqualsAndHashCode(callSuper = true)
 public class YouAsAFighter extends Fighter {
 
-    public YouAsAFighter(String name) {
-        super(name);
+    public YouAsAFighter() {
+        super("You");
         this.remainingHealth = 50;
-
-        this.manaSpent = 0;
-        this.mana = 50;
+        this.mana = 500;
     }
 
-    private int manaSpent;
+    public YouAsAFighter(YouAsAFighter youAsAFighter) {
+        super(youAsAFighter.getName());
+        this.armor = youAsAFighter.getArmor();
+        this.damage = youAsAFighter.getDamage();
+        this.remainingHealth = youAsAFighter.getRemainingHealth();
+        this.mana = youAsAFighter.getMana();
+        for (Spell ongoingSpell : youAsAFighter.getOngoingSpells()) {
+            ongoingSpells.add(new Spell(ongoingSpell.getSpellType(), ongoingSpell.getRemainingRoundsActive()));
+        }
+    }
 
     private int mana;
 
@@ -30,7 +37,6 @@ public class YouAsAFighter extends Fighter {
         } else {
             ongoingSpells.add(new Spell(spellType, spellType.getNumberOfRounds()));
             this.mana -= spellType.getManaCost();
-            this.manaSpent += spellType.getManaCost();
         }
     }
 
