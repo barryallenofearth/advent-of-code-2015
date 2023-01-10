@@ -11,7 +11,7 @@ public class BattleState {
 
     private int currentRound = 0;
 
-    private final YouAsAFighter youAsAFighter;
+    private final Wizard wizard;
 
     private final Boss boss;
 

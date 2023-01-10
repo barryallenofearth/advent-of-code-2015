@@ -9,27 +9,27 @@ import java.util.function.Consumer;
 @Getter
 @RequiredArgsConstructor
 public enum SpellType {
-    MAGIC_MISSILE(0, 53, ((boss, youAsAFighter) -> boss.receiveDamage(4)), youAsAFighter -> {
+    MAGIC_MISSILE(0, 53, ((boss, wizard) -> boss.receiveDamage(4)), wizard -> {
     }),
-    DRAIN(0, 73, ((boss, youAsAFighter) -> {
+    DRAIN(0, 73, ((boss, wizard) -> {
         boss.receiveDamage(2);
-        youAsAFighter.setRemainingHealth(youAsAFighter.getRemainingHealth() + 2);
-    }), youAsAFighter -> {
+        wizard.setRemainingHealth(wizard.getRemainingHealth() + 2);
+    }), wizard -> {
     }),
     SHIELD(6, 113,
-            (boss, youAsAFighter) -> youAsAFighter.setArmor(7),
-            youAsAFighter -> youAsAFighter.setArmor(0)),
+            (boss, wizard) -> wizard.setArmor(7),
+            wizard -> wizard.setArmor(0)),
     POISON(6, 173,
-            (boss, youAsAFighter) -> boss.receiveDamage(3),
-            (youAsAFighter -> {
+            (boss, wizard) -> boss.receiveDamage(3),
+            (wizard -> {
             })),
-    RECHARGE(5, 229, (boss, youAsAFighter) -> youAsAFighter.setMana(youAsAFighter.getMana() + 101), youAsAFighter -> {
+    RECHARGE(5, 229, (boss, wizard) -> wizard.setMana(wizard.getMana() + 101), wizard -> {
     });
 
     private final int numberOfRounds;
 
     private final int manaCost;
 
-    private final BiConsumer<Boss, YouAsAFighter> handleSpellEffect;
-    private final Consumer<YouAsAFighter> endOfSpellAction;
+    private final BiConsumer<Boss, Wizard> handleSpellEffect;
+    private final Consumer<Wizard> endOfSpellAction;
 }
