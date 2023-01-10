@@ -5,8 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -14,30 +13,31 @@ import java.util.List;
 @ToString(callSuper = true)
 public class YouAsAFighter extends Fighter {
 
-    public YouAsAFighter(String name, Weapon weapon, Armor armor) {
-        super(name, weapon, armor);
+    public YouAsAFighter(Weapon weapon, Armor armor, Set<Ring> rings) {
+        super("You", weapon, armor);
+        this.rings = rings;
+        this.cost = weapon.getCost() + (armorEquipped.map(Equipment::getCost).orElse(0)) + rings.stream().mapToInt(Ring::getCost).sum();
     }
 
-    private final List<Ring> rings = new ArrayList<>();
+    private final int cost;
+
+    private final Set<Ring> rings;
 
     @Override
-    public int receiveDamage(int damage) {
-        if (armorEquipped.isPresent()) {
-            damage -= armorEquipped.get().getArmor();
-        }
+    public void receiveDamage(int damage) {
         for (Ring ring : rings) {
             damage -= ring.getArmor();
         }
-        return super.receiveDamage(damage);
+        super.receiveDamage(damage);
     }
 
     @Override
-    public int dealDamageToFighter(Fighter fighter, int damage) {
-        damage += damage;
-        damage += weapon.getDamage();
+    public void dealDamageToFighter(Fighter fighter) {
+        int damage = weapon.getDamage();
         for (Ring ring : rings) {
             damage += ring.getDamage();
         }
-        return super.dealDamageToFighter(fighter, damage);
+        fighter.receiveDamage(damage);
     }
+
 }

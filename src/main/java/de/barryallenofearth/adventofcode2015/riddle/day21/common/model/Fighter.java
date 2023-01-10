@@ -23,16 +23,14 @@ public class Fighter {
 
     protected int remainingHealth;
 
-    public int dealDamageToFighter(Fighter fighter, int damage) {
-        return fighter.receiveDamage(damage);
+    public void dealDamageToFighter(Fighter fighter) {
+        fighter.receiveDamage(weapon.getDamage());
     }
 
-    public int receiveDamage(int damage) {
+    public void receiveDamage(int damage) {
         if (armorEquipped.isPresent()) {
             damage -= armorEquipped.get().getArmor();
         }
         this.remainingHealth -= Math.max(damage, 1);
-
-        return this.remainingHealth;
     }
 }
