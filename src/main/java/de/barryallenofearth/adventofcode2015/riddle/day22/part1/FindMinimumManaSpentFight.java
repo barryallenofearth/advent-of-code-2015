@@ -1,4 +1,4 @@
-package de.barryallenofearth.adventofcode2015.riddle.day22.common.uitl;
+package de.barryallenofearth.adventofcode2015.riddle.day22.part1;
 
 import de.barryallenofearth.adventofcode2015.riddle.day22.common.model.*;
 
