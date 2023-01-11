@@ -1,9 +1,14 @@
 package de.barryallenofearth.adventofcode2015.riddle.day24.common.uitl;
 
+import com.google.common.collect.Collections2;
 import de.barryallenofearth.adventofcode2015.riddle.day24.common.model.Sleigh;
 import de.barryallenofearth.adventofcode2015.riddle.util.RiddleFileReader;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
@@ -26,26 +31,45 @@ public class SleighBalancer {
 		System.out.println("Each group has to weigh exactly " + weighGoalPerGroup + ". The total sum is " + sum);
 
 		final List<Sleigh> balancedSleighs = new ArrayList<>();
-		final Sleigh start = createStartingSleigh(allPackages, weighGoalPerGroup);
 
-		final List<Sleigh> openNodes = new ArrayList<>();
-		openNodes.add(start);
-		while (!openNodes.isEmpty()) {
-			final Sleigh currentSleigh = openNodes.get(0);
-			openNodes.remove(currentSleigh);
+		final Collection<List<Integer>> permutations = Collections2.orderedPermutations(allPackages, Comparator.comparingInt(Integer::intValue));
 
-			//TODO rearrange packages
+		System.out.println(permutations.size() + " will be investigated.");
+		Sleigh minSleigh = null;
+		int minSize = allPackages.size();
+		long minQuantumEntanglement = Long.MAX_VALUE;
+		int index = 0;
+		final LocalDateTime startingTime = LocalDateTime.now();
+		for (List<Integer> permutation : permutations) {
 
-			if (isSleighBalanced(currentSleigh)) {
-				balancedSleighs.add(currentSleigh);
+			final Sleigh sleigh = createStartingSleigh(new ArrayList<>(permutation), weighGoalPerGroup);
+			if (sleigh.getCenter().size() < minSize) {
+				minSleigh = sleigh;
+				minSize = sleigh.getCenter().size();
+				minQuantumEntanglement = quantumEntanglement(sleigh);
+				System.out.println(minSleigh);
+				System.out.println(minSize);
+				System.out.println(minQuantumEntanglement);
+			} else if (sleigh.getCenter().size() == minSize && quantumEntanglement(sleigh) < minQuantumEntanglement) {
+				minSleigh = sleigh;
+				minQuantumEntanglement = quantumEntanglement(sleigh);
+				System.out.println(minSleigh);
+				System.out.println(minSize);
+				System.out.println(minQuantumEntanglement);
 			}
-			openNodes.sort(SLEIGH_COMPARATOR);
+			index++;
+
+			if (index % 10_000 == 0) {
+				System.out.println(index / 1_000_000 + "x10^6 steps investigated");
+				System.out.printf("%.02f%% processed.%n", ((double) index) / permutations.size() * 100.);
+				System.out.printf("%.003f minutes.%n", Duration.between(startingTime, LocalDateTime.now()).getSeconds() / 60.);
+				System.out.println(minQuantumEntanglement + " is current min quantum entanglement.");
+				System.out.println();
+				break;
+			}
 		}
 
-		return balancedSleighs.stream()
-				.sorted(SLEIGH_COMPARATOR)
-				.findFirst()
-				.get();
+		return minSleigh;
 	}
 
 	private List<Integer> getAllPackages() {
@@ -58,7 +82,7 @@ public class SleighBalancer {
 	}
 
 	private Sleigh createStartingSleigh(List<Integer> allPackages, int weighGoalPerGroup) {
-		final Sleigh sleigh = new Sleigh(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+		final Sleigh sleigh = new Sleigh();
 		fillCompartment(allPackages, weighGoalPerGroup, sleigh.getCenter());
 		fillCompartment(allPackages, weighGoalPerGroup, sleigh.getLeft());
 		sleigh.getRight().addAll(allPackages);
@@ -68,10 +92,15 @@ public class SleighBalancer {
 	private void fillCompartment(List<Integer> allPackages, int weighGoalPerGroup, List<Integer> compartment) {
 		for (int index = allPackages.size() - 1; index >= 0; index--) {
 			final Integer weight = allPackages.get(index);
-			if (sumUp(compartment) + weight <= weighGoalPerGroup) {
+			final int sum = sumUp(compartment);
+			if (sum + weight <= weighGoalPerGroup) {
 				compartment.add(weight);
 				allPackages.remove(index);
+				if (sum + weight == weighGoalPerGroup) {
+					break;
+				}
 			}
+
 		}
 	}
 
