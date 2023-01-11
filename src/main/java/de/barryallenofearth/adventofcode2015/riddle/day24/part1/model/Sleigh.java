@@ -1,4 +1,4 @@
-package de.barryallenofearth.adventofcode2015.riddle.day24.common.model;
+package de.barryallenofearth.adventofcode2015.riddle.day24.part1.model;
 
 import lombok.Data;
 
