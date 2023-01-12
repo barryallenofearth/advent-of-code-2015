@@ -17,51 +17,51 @@ public class MoleculeGenerator {
 
         final SingleReplacementVariantFinder variantFinder = new SingleReplacementVariantFinder();
         //contains all currently or previously investigated molecule string
-        final Set<String> seenMolecules = new HashSet<>();
-        seenMolecules.add(STARTING_MOLECULE);
 
         int minNumberOfSteps = 0;
 
-        Map<Integer, List<String>> openNodes = new HashMap<>();
-        openNodes.put(minNumberOfSteps, new ArrayList<>() {{
+        Map<Integer, TreeSet<String>> openNodes = new HashMap<>();
+        openNodes.put(minNumberOfSteps, new TreeSet<>() {{
             add(STARTING_MOLECULE);
         }});
 
-        int variantsEvaluated = 0;
+        final int[] variantsEvaluated = {0};
         while (!openNodes.isEmpty()) {
-            final String currentMolecule = openNodes.get(minNumberOfSteps).get(0);
+            final String currentMolecule = openNodes.get(minNumberOfSteps).first();
             openNodes.get(minNumberOfSteps).remove(currentMolecule);
 
-            final Set<String> variants = variantFinder.getVariants(new ReplacementsAndMolecule(replacements, currentMolecule))
+            final Set<String> potentialVariants = variantFinder.getVariants(new ReplacementsAndMolecule(replacements, currentMolecule));
+
+            final int currentSteps = minNumberOfSteps;
+            final Set<String> variants = potentialVariants
                     .stream()
-                    .filter(variant -> !seenMolecules.contains(variant))
+                    .peek(variant -> {
+                        variantsEvaluated[0] = variantsEvaluated[0] + 1;
+                        if (variantsEvaluated[0] % 1_000_000 == 0) {
+                            System.out.println(variantsEvaluated[0] + " were investigated.");
+                            System.out.println(openNodes.values().stream().mapToInt(Set::size).sum() + " number of open nodes.");
+                            System.out.println(openNodes.get(currentSteps).first() + " is the current top molecule after " + currentSteps);
+                            System.out.println(targetMolecule);
+                            System.out.println("replacements taken: number of encounters");
+                            openNodes.forEach((key, value) -> System.out.println(key + ": " + value.size()));
+                            System.out.println();
+
+                        }
+                    })
                     .collect(Collectors.toSet());
 
             for (String variant : variants) {
                 if (targetMolecule.equals(variant)) {
                     return minNumberOfSteps;
                 }
-                if (!seenMolecules.contains(variant) && variant.length() <= targetMolecule.length()) {
+                if (variant.length() <= targetMolecule.length()) {
                     final int nextStep = minNumberOfSteps + 1;
                     if (!openNodes.containsKey(nextStep)) {
-                        openNodes.put(nextStep, new ArrayList<>());
+                        openNodes.put(nextStep, new TreeSet<>());
                     }
                     openNodes.get(nextStep).add(variant);
                 }
-                variantsEvaluated++;
-                if (variantsEvaluated % 100_000 == 0) {
-                    System.out.println(variantsEvaluated + " were investigated.");
-                    System.out.println(seenMolecules.size() + " unique molecules were found.");
-                    System.out.println(openNodes.values().stream().mapToInt(List::size).sum() + " number of open nodes.");
-                    System.out.println(openNodes.get(minNumberOfSteps).get(0) + " is the current top molecule after " + minNumberOfSteps);
-                    System.out.println(targetMolecule);
-                    System.out.println("replacements taken: number of encounters");
-                    openNodes.forEach((key, value) -> System.out.println(key + ": " + value.size()));
-                    System.out.println();
-
-                }
             }
-            seenMolecules.addAll(variants);
             if (openNodes.get(minNumberOfSteps).isEmpty()) {
                 openNodes.remove(minNumberOfSteps);
                 minNumberOfSteps++;
