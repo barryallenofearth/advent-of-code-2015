@@ -3,7 +3,6 @@ package de.barryallenofearth.adventofcode2015.riddle.day19.medicine.part2;
 import de.barryallenofearth.adventofcode2015.riddle.day19.medicine.common.model.Replacement;
 import de.barryallenofearth.adventofcode2015.riddle.day19.medicine.common.model.ReplacementsAndMolecule;
 import de.barryallenofearth.adventofcode2015.riddle.day19.medicine.common.uitl.SingleReplacementVariantFinder;
-import de.barryallenofearth.adventofcode2015.riddle.day19.medicine.part2.model.MoleculeState;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -17,47 +16,56 @@ public class MoleculeGenerator {
         final String targetMolecule = replacementsAndMolecule.getInitialMolecule();
 
         final SingleReplacementVariantFinder variantFinder = new SingleReplacementVariantFinder();
-        List<MoleculeState> openNodes = new ArrayList<>();
-        openNodes.add(new MoleculeState(0, STARTING_MOLECULE));
         //contains all currently or previously investigated molecule string
         final Set<String> seenMolecules = new HashSet<>();
         seenMolecules.add(STARTING_MOLECULE);
 
-        int numberOfSteps = 0;
+        int minNumberOfSteps = 0;
 
+        Map<Integer, List<String>> openNodes = new HashMap<>();
+        openNodes.put(minNumberOfSteps, new ArrayList<>() {{
+            add(STARTING_MOLECULE);
+        }});
+
+        int variantsEvaluated = 0;
         while (!openNodes.isEmpty()) {
-            final MoleculeState currentState = openNodes.get(0);
-            openNodes.remove(currentState);
-            currentState.setModificationSteps(currentState.getModificationSteps() + 1);
+            final String currentMolecule = openNodes.get(minNumberOfSteps).get(0);
+            openNodes.get(minNumberOfSteps).remove(currentMolecule);
 
-            final Set<String> variants = variantFinder.getVariants(new ReplacementsAndMolecule(replacements, currentState.getMolecule()))
+            final Set<String> variants = variantFinder.getVariants(new ReplacementsAndMolecule(replacements, currentMolecule))
                     .stream()
                     .filter(variant -> !seenMolecules.contains(variant))
                     .collect(Collectors.toSet());
 
             for (String variant : variants) {
                 if (targetMolecule.equals(variant)) {
-                    return currentState.getModificationSteps();
+                    return minNumberOfSteps;
                 }
                 if (!seenMolecules.contains(variant) && variant.length() <= targetMolecule.length()) {
-                    openNodes.add(new MoleculeState(currentState.getModificationSteps(), variant));
+                    final int nextStep = minNumberOfSteps + 1;
+                    if (!openNodes.containsKey(nextStep)) {
+                        openNodes.put(nextStep, new ArrayList<>());
+                    }
+                    openNodes.get(nextStep).add(variant);
                 }
-                numberOfSteps++;
-                if (numberOfSteps % 100_000 == 0) {
-                    System.out.println(numberOfSteps + " were investigated.");
+                variantsEvaluated++;
+                if (variantsEvaluated % 100_000 == 0) {
+                    System.out.println(variantsEvaluated + " were investigated.");
                     System.out.println(seenMolecules.size() + " unique molecules were found.");
-                    System.out.println(openNodes.size() + " number of open nodes.");
-                    System.out.println(openNodes.get(0).getMolecule() + " is the current top molecule after " + openNodes.get(0).getModificationSteps());
+                    System.out.println(openNodes.values().stream().mapToInt(List::size).sum() + " number of open nodes.");
+                    System.out.println(openNodes.get(minNumberOfSteps).get(0) + " is the current top molecule after " + minNumberOfSteps);
                     System.out.println(targetMolecule);
-                    System.out.println("molecule length: number of encounters");
-                    openNodes.stream().collect(Collectors.groupingBy(moleculeState -> moleculeState.getMolecule().length()))
-                            .forEach((key, value) -> System.out.println(key + ": " + value.size()));
+                    System.out.println("replacements taken: number of encounters");
+                    openNodes.forEach((key, value) -> System.out.println(key + ": " + value.size()));
                     System.out.println();
 
                 }
             }
             seenMolecules.addAll(variants);
-            openNodes.sort(Comparator.comparingInt(MoleculeState::getModificationSteps));
+            if (openNodes.get(minNumberOfSteps).isEmpty()) {
+                openNodes.remove(minNumberOfSteps);
+                minNumberOfSteps++;
+            }
 
         }
         return -1;
