@@ -9,6 +9,9 @@ public class GridCalculator {
 		int maxY = y;
 		int previousX = 0;
 		int previousY = 0;
+
+		int multiplier = 252533;
+		int divisor = 33554393;
 		while (x != targetX || y != targetY) {
 			x = (x + 1) % (maxY + 1);
 			if (y > 0) {
@@ -16,10 +19,11 @@ public class GridCalculator {
 			} else {
 				y = ++maxY;
 			}
-			final long nextValue = grid[previousX][previousY] + 1;
-			System.out.println(previousX + " " + previousY + " " + grid[previousX][previousY]);
+			final long nextValue = (grid[previousX][previousY] * multiplier) % divisor;
+/*			System.out.println(previousX + " " + previousY + " " + grid[previousX][previousY]);
 			System.out.println(x + " " + y + " " + nextValue);
 			System.out.println();
+			*/
 			grid[x][y] = nextValue;
 
 			previousX = x;
