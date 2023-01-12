@@ -31,6 +31,7 @@ public class PresentDistributerHouseLimit {
 //            sum++;
 //        }
         sum += houseNumber;
+        //every elf >= houseNumber / HOUSES_VISITED_PER_ELF will exceed the 50 houses limit. So either take sqrt(houseNumber) from factors function
         final int start = (int) Math.max(Math.sqrt(houseNumber), houseNumber / HOUSES_VISITED_PER_ELF);
         for (int elf = start; elf < houseNumber; elf++) {
 
