@@ -1,18 +1,17 @@
 package de.barryallenofearth.adventofcode2015.riddle.day20.elfpresents.part2;
 
-import java.util.TreeSet;
-
 public class PresentDistributerHouseLimit {
+
+	public static final int HOUSES_VISITED_PER_ELF = 50;
+
 	public int firstHouseToMatchNumberOfPresents(int targetPresents) {
 
-		int minHouseNumber = (int) (-0.5 + Math.sqrt(0.25 + targetPresents / 5.));
-		System.out.println((Math.sqrt(0.25 + targetPresents / 5.) - 0.5) + " is the minimum house number possible.");
+		int minHouseNumber = Math.max((int) (-0.5 + Math.sqrt(0.25 + targetPresents / 5.5)), 500_000);
 		System.out.println(minHouseNumber + " is the minimum house number possible.");
-		for (int house = minHouseNumber; house < targetPresents; house++) {
-			final int currentHouse = house;
-			int presentsAtHouse = factors(house).stream()
-					.filter(elf -> elf * 50 <= currentHouse)
-					.mapToInt(Integer::intValue).sum() * 11;
+		final int maxHouseNumber = targetPresents / 11 + targetPresents % 11;
+		System.out.println(maxHouseNumber + " is the maximum house number possible.");
+		for (int house = minHouseNumber; house < maxHouseNumber; house++) {
+			int presentsAtHouse = sumOfElves(house) * 11;
 			if (targetPresents <= presentsAtHouse) {
 				return house;
 			}
@@ -23,15 +22,23 @@ public class PresentDistributerHouseLimit {
 		return -1;
 	}
 
-	public TreeSet<Integer> factors(int houseNumber) {
-		TreeSet<Integer> factors = new TreeSet<>();
-		factors.add(1);
-		factors.add(houseNumber);
-		for (int test = (int) Math.sqrt(houseNumber); test < houseNumber; test++)
-			if (houseNumber % test == 0) {
-				factors.add(test);
-				factors.add(houseNumber / test);
+	public int sumOfElves(int houseNumber) {
+		int sum = 0;
+		if (houseNumber <= HOUSES_VISITED_PER_ELF) {
+			sum++;
+		}
+		sum += houseNumber;
+		for (int elf = (int) Math.sqrt(houseNumber); elf < houseNumber; elf++)
+
+			if (houseNumber % elf == 0) {
+				if (elf * HOUSES_VISITED_PER_ELF <= houseNumber) {
+					sum += elf;
+				}
+				final int factor = houseNumber / elf;
+				if (factor * HOUSES_VISITED_PER_ELF <= houseNumber) {
+					sum += factor;
+				}
 			}
-		return factors;
+		return sum;
 	}
 }
