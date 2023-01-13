@@ -20,13 +20,19 @@ public class MoleculeGenerator {
 		final String targetMolecule = replacementsAndMolecule.getInitialMolecule();
 
 		final SingleReplacementVariantFinder variantFinder = new SingleReplacementVariantFinder();
-		//contains all currently or previously investigated molecule string
 
 		String currentMolecule = targetMolecule;
 		int currentSteps = 0;
 		while (!currentMolecule.equals(STARTING_MOLECULE)) {
 
 			final List<String> potentialVariants = new ArrayList<>(variantFinder.getVariants(new ReplacementsAndMolecule(replacements, currentMolecule)));
+			if (potentialVariants.size() == 0) {
+				currentMolecule = targetMolecule;
+				currentSteps = 0;
+
+				System.out.println("No more options... Restart.");
+				continue;
+			}
 			currentMolecule = potentialVariants.get((int) (Math.random() * potentialVariants.size()));
 
 			currentSteps++;
