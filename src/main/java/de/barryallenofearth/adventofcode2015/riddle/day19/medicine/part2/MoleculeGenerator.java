@@ -9,66 +9,43 @@ import java.util.stream.Collectors;
 
 public class MoleculeGenerator {
 
-    public static final String STARTING_MOLECULE = "e";
+	public static final String STARTING_MOLECULE = "e";
 
-    public int determineMinimumNumberOfSteps(ReplacementsAndMolecule replacementsAndMolecule) {
-        final List<Replacement> replacements = replacementsAndMolecule.getReplacements();
-        final String targetMolecule = replacementsAndMolecule.getInitialMolecule();
+	public int determineMinimumNumberOfSteps(ReplacementsAndMolecule replacementsAndMolecule) {
+		final List<Replacement> replacements = replacementsAndMolecule.getReplacements().stream()
+				.filter(replacement -> !replacement.getOriginal().equals(STARTING_MOLECULE))
+				.map(replacement -> new Replacement(replacement.getReplacement(), replacement.getOriginal()))
+				.sorted(Comparator.comparing(replacement -> replacement.getOriginal().length()))
+				.collect(Collectors.toList());
 
-        final SingleReplacementVariantFinder variantFinder = new SingleReplacementVariantFinder();
-        //contains all currently or previously investigated molecule string
+		final Set<String> stepsToElectron = replacementsAndMolecule.getReplacements().stream()
+				.filter(replacement -> replacement.getOriginal().equals(STARTING_MOLECULE))
+				.map(Replacement::getReplacement)
+				.collect(Collectors.toSet());
 
-        int minNumberOfSteps = 0;
+		final String targetMolecule = replacementsAndMolecule.getInitialMolecule();
 
-        Map<Integer, TreeSet<String>> openNodes = new HashMap<>();
-        openNodes.put(minNumberOfSteps, new TreeSet<>() {{
-            add(STARTING_MOLECULE);
-        }});
+		final SingleReplacementVariantFinder variantFinder = new SingleReplacementVariantFinder();
+		//contains all currently or previously investigated molecule string
 
-        final int[] variantsEvaluated = {0};
-        while (!openNodes.isEmpty()) {
-            final String currentMolecule = openNodes.get(minNumberOfSteps).first();
-            openNodes.get(minNumberOfSteps).remove(currentMolecule);
+		String currentMolecule = targetMolecule;
+		int currentSteps = 0;
+		while (!stepsToElectron.contains(currentMolecule)) {
 
-            final Set<String> potentialVariants = variantFinder.getVariants(new ReplacementsAndMolecule(replacements, currentMolecule));
+			final List<String> potentialVariants = new ArrayList<>(variantFinder.getVariants(new ReplacementsAndMolecule(replacements, currentMolecule)));
+			currentMolecule = potentialVariants.get((int) (Math.random() * potentialVariants.size()));
 
-            final int currentSteps = minNumberOfSteps;
-            final Set<String> variants = potentialVariants
-                    .stream()
-                    .peek(variant -> {
-                        variantsEvaluated[0] = variantsEvaluated[0] + 1;
-                        if (variantsEvaluated[0] % 1_000_000 == 0) {
-                            System.out.println(variantsEvaluated[0] + " were investigated.");
-                            System.out.println(openNodes.values().stream().mapToInt(Set::size).sum() + " number of open nodes.");
-                            System.out.println(openNodes.get(currentSteps).first() + " is the current top molecule after " + currentSteps);
-                            System.out.println(targetMolecule);
-                            System.out.println("replacements taken: number of encounters");
-                            openNodes.forEach((key, value) -> System.out.println(key + ": " + value.size()));
-                            System.out.println();
+			currentSteps++;
+			if (currentSteps % 1_000_000 == 0) {
+				System.out.println(currentSteps + " were investigated.");
+				System.out.println(currentMolecule);
+				System.out.println(targetMolecule);
+				System.out.println();
 
-                        }
-                    })
-                    .collect(Collectors.toSet());
-
-            for (String variant : variants) {
-                if (targetMolecule.equals(variant)) {
-                    return minNumberOfSteps;
-                }
-                if (variant.length() <= targetMolecule.length()) {
-                    final int nextStep = minNumberOfSteps + 1;
-                    if (!openNodes.containsKey(nextStep)) {
-                        openNodes.put(nextStep, new TreeSet<>());
-                    }
-                    openNodes.get(nextStep).add(variant);
-                }
-            }
-            if (openNodes.get(minNumberOfSteps).isEmpty()) {
-                openNodes.remove(minNumberOfSteps);
-                minNumberOfSteps++;
-            }
-
-        }
-        return -1;
-    }
+			}
+		}
+		System.out.println(currentMolecule);
+		return currentSteps + 1;
+	}
 
 }

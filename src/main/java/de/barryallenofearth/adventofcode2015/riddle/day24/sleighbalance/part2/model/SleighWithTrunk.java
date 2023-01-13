@@ -1,4 +1,4 @@
-package de.barryallenofearth.adventofcode2015.riddle.day24.part2.model;
+package de.barryallenofearth.adventofcode2015.riddle.day24.sleighbalance.part2.model;
 
 import lombok.Data;
 

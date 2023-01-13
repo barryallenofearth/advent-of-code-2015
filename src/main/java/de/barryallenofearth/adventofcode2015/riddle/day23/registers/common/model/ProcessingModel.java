@@ -1,4 +1,4 @@
-package de.barryallenofearth.adventofcode2015.riddle.day23.common.model;
+package de.barryallenofearth.adventofcode2015.riddle.day23.registers.common.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

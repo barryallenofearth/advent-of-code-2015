@@ -1,7 +1,7 @@
-package de.barryallenofearth.adventofcode2015.riddle.day24.part2.uitl;
+package de.barryallenofearth.adventofcode2015.riddle.day24.sleighbalance.part1.uitl;
 
 import com.google.common.collect.Collections2;
-import de.barryallenofearth.adventofcode2015.riddle.day24.part2.model.SleighWithTrunk;
+import de.barryallenofearth.adventofcode2015.riddle.day24.sleighbalance.part1.model.Sleigh;
 import de.barryallenofearth.adventofcode2015.riddle.util.RiddleFileReader;
 
 import java.time.Duration;
@@ -11,9 +11,9 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
-public class SleighWithTrunkBalancer {
+public class SleighBalancer {
 
-	public static final Comparator<SleighWithTrunk> SLEIGH_COMPARATOR = (sleigh1, sleigh2) -> {
+	public static final Comparator<Sleigh> SLEIGH_COMPARATOR = (sleigh1, sleigh2) -> {
 		int diff = sleigh1.getCenter().size() - sleigh2.getCenter().size();
 		if (diff == 0) {
 			final long value = quantumEntanglement(sleigh1) - quantumEntanglement(sleigh2);
@@ -22,24 +22,26 @@ public class SleighWithTrunkBalancer {
 		return diff;
 	};
 
-	public SleighWithTrunk balance() {
+	public Sleigh balance() {
 		final List<Integer> allPackages = getAllPackages();
 
 		final int sum = sumUp(allPackages);
-		int weighGoalPerGroup = sum / 4;
+		int weighGoalPerGroup = sum / 3;
 		System.out.println("Each group has to weigh exactly " + weighGoalPerGroup + ". The total sum is " + sum);
+
+		final List<Sleigh> balancedSleighs = new ArrayList<>();
 
 		final Collection<List<Integer>> permutations = Collections2.orderedPermutations(allPackages, Comparator.comparingInt(Integer::intValue));
 
 		System.out.println(permutations.size() + " will be investigated.");
-		SleighWithTrunk minSleigh = null;
+		Sleigh minSleigh = null;
 		int minSize = allPackages.size();
 		long minQuantumEntanglement = Long.MAX_VALUE;
 		int index = 0;
 		final LocalDateTime startingTime = LocalDateTime.now();
 		for (List<Integer> permutation : permutations) {
 
-			final SleighWithTrunk sleigh = createSleigh(new ArrayList<>(permutation), weighGoalPerGroup);
+			final Sleigh sleigh = createStartingSleigh(new ArrayList<>(permutation), weighGoalPerGroup);
 			if (sleigh.getCenter().size() < minSize) {
 				minSleigh = sleigh;
 				minSize = sleigh.getCenter().size();
@@ -78,12 +80,11 @@ public class SleighWithTrunkBalancer {
 		return allPackages;
 	}
 
-	private SleighWithTrunk createSleigh(List<Integer> allPackages, int weighGoalPerGroup) {
-		final SleighWithTrunk sleigh = new SleighWithTrunk();
+	private Sleigh createStartingSleigh(List<Integer> allPackages, int weighGoalPerGroup) {
+		final Sleigh sleigh = new Sleigh();
 		fillCompartment(allPackages, weighGoalPerGroup, sleigh.getCenter());
 		fillCompartment(allPackages, weighGoalPerGroup, sleigh.getLeft());
-		fillCompartment(allPackages, weighGoalPerGroup, sleigh.getRight());
-		sleigh.getTrunk().addAll(allPackages);
+		sleigh.getRight().addAll(allPackages);
 		return sleigh;
 	}
 
@@ -106,7 +107,7 @@ public class SleighWithTrunkBalancer {
 		return packagesInCompartment.stream().mapToInt(Integer::intValue).sum();
 	}
 
-	public static long quantumEntanglement(SleighWithTrunk sleigh) {
+	public static long quantumEntanglement(Sleigh sleigh) {
 		long quantumEntanglement = 1;
 		for (Integer weigh : sleigh.getCenter()) {
 			quantumEntanglement *= weigh;
@@ -114,7 +115,7 @@ public class SleighWithTrunkBalancer {
 		return quantumEntanglement;
 	}
 
-	private boolean isSleighBalanced(SleighWithTrunk sleigh) {
+	private boolean isSleighBalanced(Sleigh sleigh) {
 		final int center = sumUp(sleigh.getCenter());
 		final int right = sumUp(sleigh.getRight());
 		final int left = sumUp(sleigh.getLeft());

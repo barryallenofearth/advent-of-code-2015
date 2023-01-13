@@ -1,8 +1,8 @@
-package de.barryallenofearth.adventofcode2015.riddle.day23.common.uitl;
+package de.barryallenofearth.adventofcode2015.riddle.day23.registers.common.uitl;
 
-import de.barryallenofearth.adventofcode2015.riddle.day23.common.model.Instruction;
-import de.barryallenofearth.adventofcode2015.riddle.day23.common.model.ProcessingModel;
-import de.barryallenofearth.adventofcode2015.riddle.day23.common.model.Registers;
+import de.barryallenofearth.adventofcode2015.riddle.day23.registers.common.model.Instruction;
+import de.barryallenofearth.adventofcode2015.riddle.day23.registers.common.model.ProcessingModel;
+import de.barryallenofearth.adventofcode2015.riddle.day23.registers.common.model.Registers;
 import de.barryallenofearth.adventofcode2015.riddle.util.RiddleFileReader;
 
 import java.util.ArrayList;
