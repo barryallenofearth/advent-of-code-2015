@@ -13,15 +13,9 @@ public class MoleculeGenerator {
 
 	public int determineMinimumNumberOfSteps(ReplacementsAndMolecule replacementsAndMolecule) {
 		final List<Replacement> replacements = replacementsAndMolecule.getReplacements().stream()
-				.filter(replacement -> !replacement.getOriginal().equals(STARTING_MOLECULE))
 				.map(replacement -> new Replacement(replacement.getReplacement(), replacement.getOriginal()))
 				.sorted(Comparator.comparing(replacement -> replacement.getOriginal().length()))
 				.collect(Collectors.toList());
-
-		final Set<String> stepsToElectron = replacementsAndMolecule.getReplacements().stream()
-				.filter(replacement -> replacement.getOriginal().equals(STARTING_MOLECULE))
-				.map(Replacement::getReplacement)
-				.collect(Collectors.toSet());
 
 		final String targetMolecule = replacementsAndMolecule.getInitialMolecule();
 
@@ -30,7 +24,7 @@ public class MoleculeGenerator {
 
 		String currentMolecule = targetMolecule;
 		int currentSteps = 0;
-		while (!stepsToElectron.contains(currentMolecule)) {
+		while (!currentMolecule.equals(STARTING_MOLECULE)) {
 
 			final List<String> potentialVariants = new ArrayList<>(variantFinder.getVariants(new ReplacementsAndMolecule(replacements, currentMolecule)));
 			currentMolecule = potentialVariants.get((int) (Math.random() * potentialVariants.size()));
@@ -45,7 +39,7 @@ public class MoleculeGenerator {
 			}
 		}
 		System.out.println(currentMolecule);
-		return currentSteps + 1;
+		return currentSteps;
 	}
 
 }
